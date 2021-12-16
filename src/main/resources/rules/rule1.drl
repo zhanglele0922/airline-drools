@@ -1,24 +1,12 @@
-//package com.aograph.chuan_air;
-//import com.aograph.chuan_air.AirlinePredict
-//import org.apache.commons.lang3.StringUtils;
-//
-//rule "rule1"
-//    salience 1000
-//    no-loop
-//    when
-//        AirlinePredict(
-//                $studPrice:std_price,
-//                $predictPrice:predict_price,
-//                $otaPrice:label,
-//                $modelType:model_type
-//                )
-//        $ap:AirlinePredict(ex_dif >=7 && ota_kzl<0.28 && StringUtils.isNotEmpty(yesterday_ota_price))
-//    then
-//        String rule_name=drools.getRule().getName();
-//
-//
-//
-//
-//        $ap.setPredict_price($predictPrice);
-//        $ap.setModel_type($modelType);
-//end
+package com.aograph.chuan_air;
+global java.util.List discount_cabin;
+
+rule "rule1"
+    salience 1000
+    no-loop
+    when
+    then
+        System.out.println(drools.getRule().getName()+"|"+discount_cabin);
+
+
+end

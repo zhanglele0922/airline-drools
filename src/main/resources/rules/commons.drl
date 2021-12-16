@@ -1,0 +1,12 @@
+package com.aograph.chuan_air;
+dialect  "java"
+global java.util.List discount_cabin
+global java.util.List discount_cabin_extend
+global java.util.Map his_7_kzl
+
+rule "commons"
+    salience 10000
+    when
+    then
+        System.out.println(drools.getRule().getName()+"|"+discount_cabin);
+end
