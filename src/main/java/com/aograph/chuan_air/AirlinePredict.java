@@ -69,6 +69,7 @@ public class AirlinePredict implements java.io.Serializable {
     private Integer advise_seats;
     private Integer org_pre_seat;
 
+
     public String getSkey() {
         return skey;
     }

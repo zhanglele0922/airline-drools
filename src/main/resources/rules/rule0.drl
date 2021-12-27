@@ -1,42 +1,42 @@
-package com.aograph.chuan_air;
-import com.aograph.chuan_air.AirlinePredict
-
-rule "rule0"
-    salience 0
-    no-loop
-    when
-        AirlinePredict(
-                $studPrice:std_price,
-                $predictPrice:predict_price,
-                $otaPrice:label,
-                $modelType:model_type
-                )
-         $ap:AirlinePredict(model_type=="ota" || model_type=="median")
-    then
-        String rule_name=drools.getRule().getName();
-        if ($otaPrice > $studPrice){
-             $predictPrice=$studPrice;
-             $modelType=$ap.getModel_type()+","+rule_name+"@"+$predictPrice;
-        }
-        else{
-            double max_diff=$otaPrice *0.025;
-            double s_studPrice=$studPrice*0.1;
-            if (($predictPrice > $otaPrice) & ($predictPrice - $otaPrice) > s_studPrice){
-                $predictPrice=$otaPrice +s_studPrice;
-                if ($predictPrice > $studPrice){
-                    $predictPrice=$studPrice;
-                }
-                $modelType=$ap.getModel_type()+","+rule_name+"@"+$predictPrice;
-            }
-
-            if (($predictPrice < $otaPrice) & ($otaPrice - $predictPrice) > s_studPrice){
-                $predictPrice=$otaPrice -max_diff;
-                 if ($predictPrice > $studPrice){
-                     $predictPrice=$studPrice;
-                 }
-                $modelType=$ap.getModel_type()+","+rule_name+"@"+$predictPrice;
-            }
-         }
-         $ap.setPredict_price($predictPrice);
-         $ap.setModel_type($modelType);
-end
+//package com.aograph.chuan_air;
+//import com.aograph.chuan_air.AirlinePredict
+//
+//rule "rule0"
+//    salience 0
+//    no-loop
+//    when
+//        $ap:AirlinePredict(model_type=="ota" || model_type=="median")
+//    then
+//
+//        $studPrice=$ap.getStd_price();
+//        $predictPrice=$ap.getPredict_price();
+//        $otaPrice=$ap.getLabel();
+//        $modelType=$ap.getModel_type();
+//
+//        String rule_name=drools.getRule().getName();
+//        if ($otaPrice > $studPrice){
+//             $predictPrice=$studPrice;
+//             $modelType=$ap.getModel_type()+","+rule_name+"@"+$predictPrice;
+//        }
+//        else{
+//            double max_diff=$otaPrice *0.025;
+//            double s_studPrice=$studPrice*0.1;
+//            if (($predictPrice > $otaPrice) & ($predictPrice - $otaPrice) > s_studPrice){
+//                $predictPrice=$otaPrice +s_studPrice;
+//                if ($predictPrice > $studPrice){
+//                    $predictPrice=$studPrice;
+//                }
+//                $modelType=$ap.getModel_type()+","+rule_name+"@"+$predictPrice;
+//            }
+//
+//            if (($predictPrice < $otaPrice) & ($otaPrice - $predictPrice) > s_studPrice){
+//                $predictPrice=$otaPrice -max_diff;
+//                 if ($predictPrice > $studPrice){
+//                     $predictPrice=$studPrice;
+//                 }
+//                $modelType=$ap.getModel_type()+","+rule_name+"@"+$predictPrice;
+//            }
+//         }
+//         $ap.setPredict_price($predictPrice);
+//         $ap.setModel_type($modelType);
+//end

@@ -1,12 +1,20 @@
 package com.aograph.chuan_air;
-global java.util.List discount_cabin;
-
+global java.util.List<DiscountCabin> discount_cabin;
+global java.lang.String predictDay;
+import com.aograph.chuan_air.Utils
 rule "rule1"
     salience 1000
     no-loop
     when
+        AirlinePredict(
+                        $studPrice:std_price,
+                        $predictPrice:predict_price,
+                        $otaPrice:label,
+                        $modelType:model_type
+                        )
+        $cur:AirlinePredict(flight_type==1)
+        and $pre:AirlinePredict() from collect (AirlinePredict(dep==$cur.dep && arr==$cur.arr && fltno==$cur.fltno && flight_date>$cur.flight_date))
+        and $next:AirlinePredict(dep==$cur.dep && arr==$cur.arr && fltno==$cur.fltno && flight_date<$next.flight_date)
     then
-        System.out.println(drools.getRule().getName()+"|"+discount_cabin);
-
-
+        System.out.println(11);
 end

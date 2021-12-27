@@ -55,10 +55,11 @@ public class TestRules {
         ap.setStd_price(2000.00);
         ap.setLabel(1500.00);
         ap.setPredict_price(200.00);
+        ap.setFlight_type(1);
         ap.setModel_type("ota");
         kieSession.insert(ap);
         kieSession.fireAllRules();
-        System.out.println(ap);
+//        System.out.println(ap);
         kieSession.dispose();
     }
 }
