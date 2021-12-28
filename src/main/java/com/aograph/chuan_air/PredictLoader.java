@@ -46,8 +46,7 @@ public class PredictLoader {
     private KieBase kieBase;
 
 
-    public void init(){
-        KieSession kieSession = kieBase.newKieSession();
+    public void init(KieSession kieSession){
 
         String sql = "select * from t_tbl_fd where insert_date = (select max(insert_date) from t_tbl_fd) and airline_2code ='3U'";
         List<Map> result = ClickHouseConfig.exeSql(sql);

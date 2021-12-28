@@ -50,10 +50,12 @@ public class TestRule1 {
 
     @Test
     public void testRule1(){
-        predictLoader.init();
+
+        KieSession kieSession = kieBase.newKieSession();
+
+        predictLoader.init(kieSession);
 
         List<AirlinePredict> aps = ExcelUtils.read("/Users/lelezhang/aograph/airline-drools/src/test/java/com/aograph/drools/test/prepare.xlsx", AirlinePredict.class);
-        KieSession kieSession = kieBase.newKieSession();
 
         kieSession.setGlobal("predictDay","2021-12-28");
         for(AirlinePredict ap:aps){
