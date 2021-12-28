@@ -1,5 +1,7 @@
 package com.aograph.chuan_air;
 
+import com.aograph.excel.annotation.ExlColumn;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,45 +30,85 @@ import java.util.List;
  **/
 public class AirlinePredict implements java.io.Serializable {
 
+    @ExlColumn(value = "skey")
     private String skey;
+    @ExlColumn(value = "flight_date")
     private Date flight_date;
+    @ExlColumn(value = "insert_date")
     private Date insert_date;
+    @ExlColumn(value = "comp")
     private String comp;
+    @ExlColumn(value = "eqt")
     private String eqt;
+    @ExlColumn(value = "fltno")
     private String fltno;
+    @ExlColumn(value = "deptime")
     private String deptime;
+    @ExlColumn(value = "arrtime")
     private String arrtime;
+    @ExlColumn(value = "dep")
     private String dep;
+    @ExlColumn(value = "arr")
     private String arr;
+    @ExlColumn(value = "cap")
     private Integer cap;
+    @ExlColumn(value = "max")
     private Integer max;
+    @ExlColumn(value = "flow_ex_dif")
     private Integer flow_ex_dif;
+    @ExlColumn(value = "od")
     private String od;
+    @ExlColumn(value = "bkd")
     private Integer bkd;
+    @ExlColumn(value = "forecast_date")
     private String forecast_date;
+    @ExlColumn(value = "predict_price")
     private Double predict_price;
+    @ExlColumn(value = "org_predict_price")
     private Double org_predict_price;
+    @ExlColumn(value = "model_type")
     private String model_type;
+    @ExlColumn(value = "ota_kzl")
     private Double ota_kzl;
+    @ExlColumn(value = "label")
     private Double label;
+    @ExlColumn(value = "org_price_gap")
     private Double org_price_gap;
+    @ExlColumn(value = "price_gap")
     private Double price_gap;
+    @ExlColumn(value = "compete_fltno")
     private String compete_fltno;
+    @ExlColumn(value = "compete_deptime")
     private String compete_deptime;
+    @ExlColumn(value = "ex_dif")
     private Integer ex_dif;
+    @ExlColumn(value = "advise_discount")
     private Double advise_discount;
+    @ExlColumn(value = "discountMedianModelPredict")
     private Integer discountMedianModelPredict;
+    @ExlColumn(value = "flight_type")
     private Integer flight_type;
+    @ExlColumn(value = "rule_predict_price")
     private Double rule_predict_price;
+    @ExlColumn(value = "compete_lowest_price")
     private Double compete_lowest_price;
+    @ExlColumn(value = "yesterday_ota_price")
     private Double yesterday_ota_price;
+    @ExlColumn(value = "r1m_ota_min_price")
     private Double r1m_ota_min_price;
+    @ExlColumn(value = "std_price")
     private Double std_price;
+    @ExlColumn(value = "his_1")
     private Integer his_1;
+    @ExlColumn(value = "his_2")
     private Integer his_2;
+    @ExlColumn(value = "his_3")
     private Integer his_3;
+    @ExlColumn(value = "his_3")
     private String flow_model_type;
+    @ExlColumn(value = "advise_seats")
     private Integer advise_seats;
+    @ExlColumn(value = "org_pre_seat")
     private Integer org_pre_seat;
 
 
