@@ -60,13 +60,13 @@ public class Utils {
                 .sorted((e1, e2) -> {
                     return e1.getOw_price().compareTo(e2.getOw_price());
                 }).findFirst().orElse(null);
-        discountCabinList.stream()
-                .filter(dc ->dc.getDeparture_3code().equals(ap.getDep()))//过滤起始地
-                .filter(dc ->dc.getArrival_3code().equals(ap.getArr()))
-                .filter(dc ->dc.getStart_date().before(predictDate))
-                .sorted((e1, e2) -> {
-                    return e1.getOw_price().compareTo(e2.getOw_price());
-                }).forEach(System.out::println);
+//        discountCabinList.stream()
+//                .filter(dc ->dc.getDeparture_3code().equals(ap.getDep()))//过滤起始地
+//                .filter(dc ->dc.getArrival_3code().equals(ap.getArr()))
+//                .filter(dc ->dc.getStart_date().before(predictDate))
+//                .sorted((e1, e2) -> {
+//                    return e1.getOw_price().compareTo(e2.getOw_price());
+//                }).forEach(System.out::println);
 
         
         if (null!=value1){
