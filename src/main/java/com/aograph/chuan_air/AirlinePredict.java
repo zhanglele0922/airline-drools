@@ -28,7 +28,7 @@ import java.util.List;
  * @description
  * @create 2021/12/13
  **/
-public class AirlinePredict implements java.io.Serializable {
+public class AirlinePredict implements java.io.Serializable,Comparable<AirlinePredict> {
 
     @ExlColumn(value = "skey")
     private String skey;
@@ -477,5 +477,10 @@ public class AirlinePredict implements java.io.Serializable {
                 ", advise_seats=" + advise_seats +
                 ", org_pre_seat=" + org_pre_seat +
                 '}';
+    }
+
+    @Override
+    public int compareTo(AirlinePredict o) {
+        return new Long(this.flight_date.getTime()-o.getFlight_date().getTime()).intValue();
     }
 }
