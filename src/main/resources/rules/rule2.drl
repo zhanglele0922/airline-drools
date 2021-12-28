@@ -1,0 +1,92 @@
+package com.aograph.chuan_air;
+global java.util.List<DiscountCabin> discount_cabin;
+global java.lang.String predictDay;
+import com.aograph.chuan_air.Utils
+import java.util.ArrayList;
+import com.aograph.chuan_air.AirlinePredict
+import java.util.Arrays;
+import java.lang.String
+import java.util.Collections;
+/*
+波谷处理
+*/
+rule "rule2_1"
+    salience 1000
+    no-loop
+    when
+        $cur:AirlinePredict(flight_type==1)
+        and $preList:ArrayList(size >=1 ) from collect(AirlinePredict(dep==$cur.dep && arr==$cur.arr && fltno==$cur.fltno && flight_date<$cur.flight_date))
+        and $nextList:ArrayList(size >=1 ) from collect(AirlinePredict(dep==$cur.dep && arr==$cur.arr && fltno==$cur.fltno && flight_date>$cur.flight_date))
+    then
+         Collections.sort($preList);
+         Collections.sort($nextList);
+         AirlinePredict $pre=(AirlinePredict)$preList.get($preList.size()-1);
+         AirlinePredict $next=(AirlinePredict)$nextList.get(0);
+         double[] arrs={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+         double max_price=Arrays.stream(arrs).max().getAsDouble();
+         if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.1)
+              & ($cur.getOta_kzl() < $next.getOta_kzl()-0.1)
+              & $cur.getEx_dif() <= 7) {
+            $cur.setRule_predict_price(max_price);
+            String $modelType1=$cur.getModel_type()+",rule2.1a@"+$cur.getRule_predict_price();
+            $cur.setModel_type($modelType1);
+         }
+         if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.05)
+              & ($cur.getOta_kzl() < $next.getOta_kzl()-0.05) &
+              $cur.getEx_dif() > 7
+              & $cur.getEx_dif()<=13
+              & $cur.getOta_kzl() <0.5 ) {
+            $cur.setRule_predict_price(max_price);
+            String $modelType2=$cur.getModel_type()+",rule2.1b@"+$cur.getRule_predict_price();
+            $cur.setModel_type($modelType2);
+         }
+end
+/*
+波谷处理
+*/
+rule "rule2_2"
+    salience 1000
+    no-loop
+    when
+        $cur:AirlinePredict(flight_type==1)
+        and $preList:ArrayList(size >=1 ) from collect(AirlinePredict(dep==$cur.dep && arr==$cur.arr && fltno==$cur.fltno && flight_date<$cur.flight_date))
+        and $nextList:ArrayList(size >=2 ) from collect(AirlinePredict(dep==$cur.dep && arr==$cur.arr && fltno==$cur.fltno && flight_date>$cur.flight_date))
+    then
+         Collections.sort($preList);
+         Collections.sort($nextList);
+
+         AirlinePredict $pre=(AirlinePredict)$preList.get($preList.size()-1);
+         AirlinePredict $next=(AirlinePredict)$nextList.get(0);
+         AirlinePredict $next2=(AirlinePredict)$nextList.get(1);
+
+         if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.1)
+              & ($cur.getOta_kzl() < $next2.getOta_kzl()-0.1)
+              & ($next.getOta_kzl() < $pre.getOta_kzl()-0.1)
+              & ($next.getOta_kzl() < $next2.getOta_kzl()-0.1)
+              & $cur.getEx_dif() <= 7) {
+
+              double[] arrs={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+              double max_price=Arrays.stream(arrs).max().getAsDouble();
+
+              $cur.setRule_predict_price(max_price);
+              String $modelType=$cur.getModel_type()+",rule2.2a@"+$cur.getRule_predict_price();
+              $cur.setModel_type($modelType);
+         }
+
+         if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.05)
+                       & ($cur.getOta_kzl() < $next2.getOta_kzl()-0.05)
+                       & ($next.getOta_kzl() < $pre.getOta_kzl()-0.05)
+                       & ($next.getOta_kzl() < $next2.getOta_kzl()-0.05)
+                       & $cur.getEx_dif() > 7
+                       & $cur.getEx_dif() <=12 ) {
+
+               double[] arrs1={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+               double max_price1=Arrays.stream(arrs1).max().getAsDouble();
+
+               $cur.setRule_predict_price(max_price1);
+               String $modelType1=$cur.getModel_type()+",rule2.2b@"+$cur.getRule_predict_price();
+               $cur.setModel_type($modelType1);
+         }
+end
+
+
