@@ -1,0 +1,40 @@
+package com.aograph.chuan_air;
+global java.util.List<DiscountCabin> discount_cabin;
+global java.lang.String predictDay;
+import com.aograph.chuan_air.Utils
+import java.util.ArrayList;
+import com.aograph.chuan_air.AirlinePredict
+import java.util.Arrays;
+import java.lang.String
+import java.util.Collections;
+
+
+rule "独飞航线：销售日期D0-D7，客座率低于28%时，预测价格应低于前一天OTA价格。不低于最低政策价格"
+    salience 1000
+    no-loop
+    when
+        $cur:AirlinePredict(ex_dif>=0,ex_dif<=7,ota_kzl<0.28,flight_type==0)
+    then
+        double[] arrs={$cur.getYesterday_ota_price()-$cur.getStd_price()*0.025,Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+        double max_price=Arrays.stream(arrs).max().getAsDouble();
+        $cur.setRule_predict_price(max_price);
+        String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
+        $cur.setModel_type($modelType);
+end
+
+rule "竞飞航线：销售日期D0-D7，客座率低于28%时，预测价格应低于前一天OTA价格。不低于最低政策价格"
+    salience 1000
+    no-loop
+    when
+        $cur:AirlinePredict(ex_dif>=0,ex_dif<=7,ota_kzl<0.28,flight_type!=0,( ota_kzl<0.14 || (ota_kzl>=0.14 & ex_dif < 4 )))
+    then
+        if ($cur.getCompete_lowest_price() !=null){
+            double[] arrs={$cur.getYesterday_ota_price()-$cur.getStd_price()*0.025,Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+            double max_price=Arrays.stream(arrs).max().getAsDouble();
+            $cur.setRule_predict_price(max_price);
+            String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
+            $cur.setModel_type($modelType);
+        }
+
+
+end
