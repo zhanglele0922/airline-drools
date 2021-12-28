@@ -272,7 +272,7 @@ public class AirlinePredict implements java.io.Serializable,Comparable<AirlinePr
         this.ota_kzl = ota_kzl;
     }
 
-    public Double getLabel() {
+    public  Double getLabel() {
         return label;
     }
 

@@ -13,7 +13,7 @@ rule "独飞航线：销售日期D0-D7，客座率低于28%时，预测价格应
     salience 1000
     no-loop
     when
-        $cur:AirlinePredict(ex_dif>=0,ex_dif<=7,ota_kzl<0.28,flight_type==0)
+        $cur:AirlinePredict(flight_type==0,ex_dif>=0,ex_dif<=7,ota_kzl<0.28)
     then
         double[] arrs={$cur.getYesterday_ota_price()-$cur.getStd_price()*0.025,Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
         double max_price=Arrays.stream(arrs).max().getAsDouble();
@@ -22,19 +22,28 @@ rule "独飞航线：销售日期D0-D7，客座率低于28%时，预测价格应
         $cur.setModel_type($modelType);
 end
 
-rule "竞飞航线：销售日期D0-D7，客座率低于28%时，预测价格应低于前一天OTA价格。不低于最低政策价格"
+rule "竞飞航线：销售日期D0-D7，客座率低于14%或者ex_dif<=4并且有竞飞航班，预测价格和ota价格做对比取最低值。"
     salience 1000
     no-loop
     when
-        $cur:AirlinePredict(ex_dif>=0,ex_dif<=7,ota_kzl<0.28,flight_type!=0,( ota_kzl<0.14 || (ota_kzl>=0.14 & ex_dif < 4 )))
+        $cur:AirlinePredict(flight_type!=0,ex_dif<=7,ota_kzl<0.28,(ota_kzl<0.14 || (ota_kzl>=0.14 && ex_dif < 4)),compete_lowest_price!=null)
     then
-        if ($cur.getCompete_lowest_price() !=null){
-            double[] arrs={$cur.getYesterday_ota_price()-$cur.getStd_price()*0.025,Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
-            double max_price=Arrays.stream(arrs).max().getAsDouble();
-            $cur.setRule_predict_price(max_price);
+            double[] arrs={$cur.getOrg_predict_price(),$cur.getLabel()};
+            double min_price=Arrays.stream(arrs).min().getAsDouble();
+            $cur.setRule_predict_price(min_price);
             String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
             $cur.setModel_type($modelType);
-        }
+end
 
 
+rule "竞飞航线：销售日期D0-D7，客座率低于14%或者ex_dif<=4并且没有竞飞航班，预测价格取该航线所有航班ota外放价格的最低价格"
+    salience 1000
+    no-loop
+    when
+        $cur:AirlinePredict(flight_type!=0,ex_dif<=7,ota_kzl<0.28,(ota_kzl<0.14 || (ota_kzl>=0.14 && ex_dif < 4)),compete_lowest_price==null)
+        $min:Number()from accumulate(AirlinePredict(fltno==$cur.fltno,ex_dif<=14,$label:label),min($label))
+    then
+        $cur.setRule_predict_price($min.doubleValue());
+        String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
+        $cur.setModel_type($modelType);
 end
