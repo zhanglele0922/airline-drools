@@ -1,5 +1,6 @@
-package com.aograph.drools.controller;
+package com.aograph.controllers;
 
+import com.aograph.config.ClickHouseConfig;
 import org.kie.api.KieBase;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class GobalTestController {
 
     @RequestMapping("/test")
     public String testGlobal(){
+        ClickHouseConfig.getConn();
         KieSession session=kieBase.newKieSession();
         List testList=new ArrayList<>();
         testList.add("sdfsdfsdf");

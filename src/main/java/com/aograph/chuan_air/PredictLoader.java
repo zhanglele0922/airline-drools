@@ -1,14 +1,17 @@
-package com.aograph.drools.test;
+package com.aograph.chuan_air;
 
-import com.aograph.chuan_air.AirlinePredict;
-import com.aograph.DroolsApplication;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import com.alibaba.fastjson.JSONArray;
+import com.aograph.config.ClickHouseConfig;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kie.api.KieBase;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * ┏┓　　　┏┓
@@ -31,31 +34,27 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  * @author lelezhang
  * @description
- * @create 2021/12/10
+ * @create 2021/12/28
  **/
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = DroolsApplication.class)
-public class TestRules {
+@Component
+public class PredictLoader {
 
-    static {
-
-    }
+    @Autowired
+    private ClickHouseConfig clickHouseConfig;
 
     @Autowired
     private KieBase kieBase;
 
-    @Test
-    public void testRule0(){
+
+    public void init(){
         KieSession kieSession = kieBase.newKieSession();
-        AirlinePredict ap=new AirlinePredict();
-        ap.setStd_price(2000.00);
-        ap.setLabel(1500.00);
-        ap.setPredict_price(200.00);
-        ap.setFlight_type(1);
-        ap.setModel_type("ota");
-        kieSession.insert(ap);
-        kieSession.fireAllRules();
-//        System.out.println(ap);
-        kieSession.dispose();
+
+        String sql = "select * from t_tbl_fd where insert_date = (select max(insert_date) from t_tbl_fd) and airline_2code ='3U'";
+        List<Map> result = ClickHouseConfig.exeSql(sql);
+
+        JSONArray jsonArray = new JSONArray();
+        List<DiscountCabin> discount_cabin = jsonArray.toJavaList(DiscountCabin.class);
+        kieSession.setGlobal("discount_cabin",discount_cabin);
+
     }
 }

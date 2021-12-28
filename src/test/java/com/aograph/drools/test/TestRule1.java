@@ -1,7 +1,8 @@
 package com.aograph.drools.test;
 
 import com.aograph.chuan_air.AirlinePredict;
-import com.aograph.drools.DroolsApplication;
+import com.aograph.chuan_air.PredictLoader;
+import com.aograph.DroolsApplication;
 import com.aograph.excel.utils.ExcelUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,15 +41,16 @@ import java.util.List;
 @SpringBootTest(classes = DroolsApplication.class)
 public class TestRule1 {
 
-    static {
-
-    }
 
     @Autowired
     private KieBase kieBase;
 
+    @Autowired
+    private PredictLoader predictLoader;
+
     @Test
     public void testRule1(){
+        predictLoader.init();
 
         List<AirlinePredict> aps = ExcelUtils.read("/Users/lelezhang/aograph/airline-drools/src/test/java/com/aograph/drools/test/prepare.xlsx", AirlinePredict.class);
         KieSession kieSession = kieBase.newKieSession();
