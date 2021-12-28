@@ -3,6 +3,7 @@ package com.aograph.chuan_air;
 
 import com.alibaba.fastjson.JSONArray;
 import com.aograph.config.ClickHouseConfig;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kie.api.KieBase;
@@ -50,9 +51,9 @@ public class PredictLoader {
 
         String sql = "select * from t_tbl_fd where insert_date = (select max(insert_date) from t_tbl_fd) and airline_2code ='3U'";
         List<Map> result = ClickHouseConfig.exeSql(sql);
-
-        JSONArray jsonArray = new JSONArray();
-        List<DiscountCabin> discount_cabin = jsonArray.toJavaList(DiscountCabin.class);
+        String json = JSONArray.toJSONString(result);
+        List<DiscountCabin> discount_cabin = null;
+        discount_cabin = JSONArray.parseArray(json,DiscountCabin.class);
         kieSession.setGlobal("discount_cabin",discount_cabin);
 
     }
