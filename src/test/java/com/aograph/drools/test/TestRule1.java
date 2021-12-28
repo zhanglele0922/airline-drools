@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -50,19 +52,15 @@ public class TestRule1 {
 
     @Test
     public void testRule1(){
-
         KieSession kieSession = kieBase.newKieSession();
-
         predictLoader.init(kieSession);
-
         List<AirlinePredict> aps = ExcelUtils.read("/Users/lelezhang/aograph/airline-drools/src/test/java/com/aograph/drools/test/prepare.xlsx", AirlinePredict.class);
-
-        kieSession.setGlobal("predictDay","2021-12-28");
+        String ymd = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        kieSession.setGlobal("predictDay",ymd);
         for(AirlinePredict ap:aps){
             kieSession.insert(ap);
         }
         kieSession.fireAllRules();
-//        System.out.println(ap);
         kieSession.dispose();
     }
 }
