@@ -11,8 +11,8 @@ import java.util.Collections;
 /*
 波谷处理
 */
-rule "独飞航线，波谷处理：同一航班，相邻三个起飞日期，D01-D7出现某一日客座率低于前后客座率10%时，D8-D13低于前后5%时，预测价格应低于前后价格中最低价的0.5折"
-    salience 1000
+rule "price-pedict:独飞航线，波谷处理：同一航班，相邻三个起飞日期，D01-D7出现某一日客座率低于前后客座率10%时，D8-D13低于前后5%时，预测价格应低于前后价格中最低价的0.5折"
+    salience 999
     no-loop
     when
         $cur:AirlinePredict(flight_type==1)
@@ -31,6 +31,7 @@ rule "独飞航线，波谷处理：同一航班，相邻三个起飞日期，D0
             $cur.setRule_predict_price(max_price);
             String $modelType1=$cur.getModel_type()+",rule2.1a@"+$cur.getRule_predict_price();
             $cur.setModel_type($modelType1);
+            update($cur);
          }
          if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.05)
               & ($cur.getOta_kzl() < $next.getOta_kzl()-0.05) &
@@ -40,13 +41,14 @@ rule "独飞航线，波谷处理：同一航班，相邻三个起飞日期，D0
             $cur.setRule_predict_price(max_price);
             String $modelType2=$cur.getModel_type()+",rule2.1b@"+$cur.getRule_predict_price();
             $cur.setModel_type($modelType2);
+            update($cur);
          }
 end
 /*
 波谷处理
 */
-rule "独飞航线，波谷处理：同一航班，相邻四个起飞日期，D01-D7出现某二日客座率低于前后客座率10%时，D8-D12低于前后5%时，预测价格应低于前后价格中最低价的0.5折"
-    salience 1000
+rule "price-pedict:独飞航线，波谷处理：同一航班，相邻四个起飞日期，D01-D7出现某二日客座率低于前后客座率10%时，D8-D12低于前后5%时，预测价格应低于前后价格中最低价的0.5折"
+    salience 999
     no-loop
     when
         $cur:AirlinePredict(flight_type==1)
@@ -72,6 +74,7 @@ rule "独飞航线，波谷处理：同一航班，相邻四个起飞日期，D0
               $cur.setRule_predict_price(max_price);
               String $modelType=$cur.getModel_type()+",rule2.2a@"+$cur.getRule_predict_price();
               $cur.setModel_type($modelType);
+              update($cur);
          }
 
          if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.05)
@@ -87,6 +90,7 @@ rule "独飞航线，波谷处理：同一航班，相邻四个起飞日期，D0
                $cur.setRule_predict_price(max_price1);
                String $modelType1=$cur.getModel_type()+",rule2.2b@"+$cur.getRule_predict_price();
                $cur.setModel_type($modelType1);
+               update($cur);
          }
 end
 

@@ -4,10 +4,13 @@ import com.aograph.chuan_air.AirlinePredict;
 import com.aograph.chuan_air.PredictLoader;
 import com.aograph.DroolsApplication;
 import com.aograph.excel.utils.ExcelUtils;
+import org.drools.core.base.RuleNameStartsWithAgendaFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.KieBase;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.AgendaFilter;
+import org.kie.api.runtime.rule.Match;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -64,7 +67,10 @@ public class TestRule1 {
         for(AirlinePredict ap:aps){
             kieSession.insert(ap);
         }
-        int fires=kieSession.fireAllRules();
+        int fires=kieSession.fireAllRules(new RuleNameStartsWithAgendaFilter("price-pedict"));
+        for(AirlinePredict ap: aps){
+            System.out.println("skey:"+ap.getSkey()+",model_type:"+ap.getModel_type()+",rule_predict_price:"+ap.getRule_predict_price());
+        }
         kieSession.dispose();
     }
 }

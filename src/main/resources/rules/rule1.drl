@@ -10,7 +10,7 @@ import java.lang.String
 import java.util.Collections;
 
 
-rule "独飞航线：销售日期D0-D7，客座率低于28%时，预测价格应低于前一天OTA价格。不低于最低政策价格"
+rule "price-pedict:独飞航线,销售日期D0-D7，客座率低于28%时，预测价格应低于前一天OTA价格。不低于最低政策价格"
     salience 1000
     no-loop
     when
@@ -21,9 +21,10 @@ rule "独飞航线：销售日期D0-D7，客座率低于28%时，预测价格应
         $cur.setRule_predict_price(max_price);
         String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
         $cur.setModel_type($modelType);
+        update($cur);
 end
 
-rule "竞飞航线：销售日期D0-D7，客座率低于14%或者ex_dif<=4并且有竞飞航班，预测价格和ota价格做对比取最低值。"
+rule "price-pedict:竞飞航线,销售日期D0-D7，客座率低于14%或者ex_dif<=4并且有竞飞航班，预测价格和ota价格做对比取最低值。"
     salience 1000
     no-loop
     when
@@ -34,10 +35,11 @@ rule "竞飞航线：销售日期D0-D7，客座率低于14%或者ex_dif<=4并且
             $cur.setRule_predict_price(min_price);
             String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
             $cur.setModel_type($modelType);
+            update($cur);
 end
 
 
-rule "竞飞航线：销售日期D0-D7，客座率低于14%或者ex_dif<=4并且没有竞飞航班，预测价格取该航线所有航班ota外放价格的最低价格"
+rule "price-pedict:竞飞航线,销售日期D0-D7，客座率低于14%或者ex_dif<=4并且没有竞飞航班，预测价格取该航线所有航班ota外放价格的最低价格"
     salience 1000
     no-loop
     when
@@ -47,4 +49,5 @@ rule "竞飞航线：销售日期D0-D7，客座率低于14%或者ex_dif<=4并且
         $cur.setRule_predict_price($min.doubleValue());
         String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();
         $cur.setModel_type($modelType);
+        update($cur);
 end
