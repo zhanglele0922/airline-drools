@@ -28,7 +28,7 @@ import java.util.Map;
 @Getter
 @Data
 @Component
-@ConfigurationProperties(prefix = "spring.clickhouse")
+@ConfigurationProperties(prefix = "spring.datasource.clickhouse")
 public class ClickHouseConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClickHouseConfig.class);

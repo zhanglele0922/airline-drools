@@ -1,5 +1,6 @@
 package com.aograph.chuan_air;
 global java.util.List<DiscountCabin> discount_cabin;
+global java.util.List<RmDiscountCabin> discount_cabin_extend;
 global java.lang.String predictDay;
 import com.aograph.chuan_air.Utils
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ rule "独飞航线：销售日期D0-D7，客座率低于28%时，预测价格应
     when
         $cur:AirlinePredict(flight_type==0,ex_dif>=0,ex_dif<=7,ota_kzl<0.28)
     then
-        double[] arrs={$cur.getYesterday_ota_price()-$cur.getStd_price()*0.025,Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+        double[] arrs={$cur.getYesterday_ota_price()-$cur.getStd_price()*0.025,Utils.getLowerPrice(discount_cabin,discount_cabin_extend,$cur).doubleValue()};
         double max_price=Arrays.stream(arrs).max().getAsDouble();
         $cur.setRule_predict_price(max_price);
         String $modelType=$cur.getModel_type()+",rule1@"+$cur.getRule_predict_price();

@@ -53,10 +53,14 @@ public class TestRule1 {
     @Test
     public void testRule1(){
         KieSession kieSession = kieBase.newKieSession();
+        String date=LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String time = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00"));
+
+
         predictLoader.init(kieSession);
         List<AirlinePredict> aps = ExcelUtils.read("/Users/lelezhang/aograph/airline-drools/src/test/java/com/aograph/drools/test/prepare.xlsx", AirlinePredict.class);
-        String ymd = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        kieSession.setGlobal("predictDay",ymd);
+
+        kieSession.setGlobal("predictDay",date);
         for(AirlinePredict ap:aps){
             kieSession.insert(ap);
         }

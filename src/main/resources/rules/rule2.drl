@@ -1,5 +1,6 @@
 package com.aograph.chuan_air;
 global java.util.List<DiscountCabin> discount_cabin;
+global java.util.List<RmDiscountCabin> discount_cabin_extend;
 global java.lang.String predictDay;
 import com.aograph.chuan_air.Utils
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ rule "独飞航线，波谷处理：同一航班，相邻三个起飞日期，D0
          Collections.sort($nextList);
          AirlinePredict $pre=(AirlinePredict)$preList.get($preList.size()-1);
          AirlinePredict $next=(AirlinePredict)$nextList.get(0);
-         double[] arrs={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+         double[] arrs={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,discount_cabin_extend,$cur).doubleValue()};
          double max_price=Arrays.stream(arrs).max().getAsDouble();
          if (($cur.getOta_kzl() < $pre.getOta_kzl()-0.1)
               & ($cur.getOta_kzl() < $next.getOta_kzl()-0.1)
@@ -65,7 +66,7 @@ rule "独飞航线，波谷处理：同一航班，相邻四个起飞日期，D0
               & ($next.getOta_kzl() < $next2.getOta_kzl()-0.1)
               & $cur.getEx_dif() <= 7) {
 
-              double[] arrs={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+              double[] arrs={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,discount_cabin_extend,$cur).doubleValue()};
               double max_price=Arrays.stream(arrs).max().getAsDouble();
 
               $cur.setRule_predict_price(max_price);
@@ -80,7 +81,7 @@ rule "独飞航线，波谷处理：同一航班，相邻四个起飞日期，D0
                        & $cur.getEx_dif() > 7
                        & $cur.getEx_dif() <=12 ) {
 
-               double[] arrs1={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,null,$cur,predictDay).doubleValue()};
+               double[] arrs1={$cur.getRule_predict_price().doubleValue(),Utils.getLowerPrice(discount_cabin,discount_cabin_extend,$cur).doubleValue()};
                double max_price1=Arrays.stream(arrs1).max().getAsDouble();
 
                $cur.setRule_predict_price(max_price1);
