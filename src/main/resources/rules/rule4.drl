@@ -1,0 +1,7 @@
+package rules;
+dialect  "mvel"
+
+rule "rule4"
+    when
+    then
+end
