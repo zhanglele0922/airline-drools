@@ -64,7 +64,7 @@ public class TestRule1 {
         for(AirlinePredict ap:aps){
             kieSession.insert(ap);
         }
-        kieSession.fireAllRules();
+        int fires=kieSession.fireAllRules();
         kieSession.dispose();
     }
 }
